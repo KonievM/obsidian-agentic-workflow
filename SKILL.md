@@ -37,8 +37,12 @@ Don't over-apply this — a single grep, a single file read, a two-line fix does
 - `references/cross-tool-delegation.md` — using the other tool (Claude ↔ Codex) as an independent-model delegate: availability check, when to reach for it, usage-limit cooldown handling.
 - `references/task-intake-and-tracking.md` — flat plan vs. multi-workstream Story, status lifecycle, contract-first parallelism, real-time tracking, archiving. Generic starter templates for both live in `assets/templates/`.
 - `references/continuous-documentation.md` — what's worth writing back to project reference docs after a task, and what isn't.
-- `references/obsidian-backend.md` — when the project's docs/plans live in an Obsidian vault, the CLI commands and conventions that implement the two files above concretely (dropdown status properties, wikilinks, archiving via `move`). Skip if the project doesn't use Obsidian.
+- `references/obsidian-backend.md` — when the project's docs/plans live in an Obsidian vault, how this workflow's patterns (status lifecycle, archiving, cross-links) map onto one. Skip if the project doesn't use Obsidian. For the actual CLI commands, see the sibling `obsidian-vault-maintenance` skill; for how the vault should be laid out, see `obsidian-vault-structure`.
 - `references/workflows-and-pacing.md` — recognizing workflow-shaped work, the opt-in gate, rate-limit pacing for large fan-outs.
+
+## Related skills
+
+If the project's docs/plans live in an Obsidian vault: `obsidian-vault-structure` covers how the vault itself should be laid out (map of content, per-topic entry points, where the plans/templates/archive folders sit), and `obsidian-vault-maintenance` covers the CLI mechanics to create and keep that layout current. This skill covers the workflow that runs on top of both — it doesn't duplicate their content, just points into them where relevant (`references/obsidian-backend.md`).
 
 ## Per-project setup
 
