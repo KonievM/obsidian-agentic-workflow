@@ -8,25 +8,35 @@ An agent left to improvise on real-sized work tends to fail in a few predictable
 
 ## What it covers
 
-| Area | Without this | What the skill provides |
-|---|---|---|
-| Sub-agent delegation | Sub-agents spun up ad hoc, under-briefed (they start with zero shared context), or run so long their own judgment degrades without anyone noticing | Concrete spawn criteria, a briefing checklist, rotation for long-running sub-agents, and a "verify the diff, don't just relay the summary" rule |
-| Model/reasoning tier selection | Reaching for the priciest model as a default, or the cheapest one for a call that needed real judgment | A cheapest-that-works tier framework mapped to current Claude and Codex model lineups |
-| Cross-tool delegation | Not knowing Claude and Codex can serve as each other's independent second opinion, or hammering a tool that's hit an account usage limit | An availability-check procedure, when it's actually worth reaching for a second model lineage, and a cooldown convention for usage limits |
-| Task intake and tracking | A plan file that only reflects reality once, at the end; multiple sub-agents editing the same file and clobbering each other's work | Flat plans vs. multi-workstream Stories, one-file-per-subtask so parallel sub-agents don't collide, and a real-time (not batched) status-sync rule |
-| Continuous documentation | Non-obvious discoveries that lived only in one conversation and are gone once it ends — or the opposite, docs bloated with notes nobody trusts because half of them just restate the code | A concrete worth-persisting/not-worth-persisting line, and where each kind of finding should go |
-| Deterministic multi-agent workflows | Hand-chaining sub-agent calls yourself for a big audit/migration/review, which refills your own context with exactly what delegation was supposed to avoid — or the reverse, firing off an oversized fan-out that trips rate limits | Recognizing workflow-shaped work and proposing (never auto-running) a structured fan-out, plus pacing rules for large parallel work |
-| Obsidian as a docs/task-intake backend | Knowing the patterns above exist but not how they map onto an actual vault | How task intake and documentation upkeep translate into vault notes/properties, when that's where a project's docs and plans live |
+| Area | What it gives you |
+|---|---|
+| Sub-agent delegation | Spawn criteria, a briefing checklist, rotation for long-running sub-agents, "verify the diff, don't just relay" — instead of ad hoc, under-briefed sub-agents |
+| Multi-agent hierarchy | Root/lead/specialist/reviewer roles, task routing, shared-worktree ownership — instead of agents colliding on the same files with no one accountable for integration |
+| Model/reasoning tier selection | A cheapest-that-works tier framework, mapped to current Claude and Codex lineups — instead of defaulting to the priciest (or cheapest) model out of habit |
+| Cross-tool delegation | An availability check, when to actually reach for the other tool, a usage-limit cooldown convention — instead of not knowing Claude/Codex can check each other, or hammering a tool past its limit |
+| Task intake and tracking | Flat plans vs. Stories, one file per subtask, real-time status sync, write-it-directly instead of draft-then-ask — instead of a plan that only reflects reality at the end |
+| Live validation | When a real client/browser click-through against a real stack is worth the cost, and how to do it safely — instead of calling a feature done from unit tests and API checks alone |
+| Continuous documentation | A worth-persisting line and where each finding goes, archiving vs. documenting as separate steps — instead of discoveries that evaporate, or an archive nobody folds back into the docs |
+| Deterministic multi-agent workflows | Recognizing workflow-shaped work, proposing (never auto-running) a structured fan-out, pacing rules — instead of hand-chaining calls yourself or firing an oversized fan-out |
+| Obsidian as a docs/task-intake backend | How the patterns above map onto vault notes/properties — instead of knowing the patterns exist but not how to apply them |
 
 For the vault layout and CLI mechanics themselves (not covered here), see the companion [`obsidian-vault-toolkit`](https://github.com/KonievM/obsidian-vault-toolkit) (`obsidian-vault-structure` + `obsidian-vault-maintenance`).
 
 ## Install
 
-**Claude Code:** copy (or clone) this folder into `~/.claude/skills/obsidian-agentic-workflow` (user-level) or `<project>/.claude/skills/obsidian-agentic-workflow` (project-level).
+**Claude Code** (user-level; swap the destination for `<project>/.claude/skills/obsidian-agentic-workflow` to install it project-scoped instead):
 
-**Codex:** copy (or clone) this folder into `~/.codex/skills/obsidian-agentic-workflow` (or `$CODEX_HOME/skills/obsidian-agentic-workflow`).
+```bash
+git clone https://github.com/KonievM/obsidian-agentic-workflow ~/.claude/skills/obsidian-agentic-workflow
+```
 
-The skill is self-contained — `SKILL.md` plus `references/` (loaded on trigger) and `assets/templates/` (generic starter templates for flat plans and Stories). See `SKILL.md` for the full structure.
+**Codex:**
+
+```bash
+git clone https://github.com/KonievM/obsidian-agentic-workflow "${CODEX_HOME:-$HOME/.codex}/skills/obsidian-agentic-workflow"
+```
+
+No further setup — the skill triggers automatically once its folder is in place. It's self-contained: `SKILL.md` plus `references/` (loaded on trigger) and `assets/templates/` (generic starter templates for flat plans and Stories). See `SKILL.md` for the full structure.
 
 ## Per-project setup
 
