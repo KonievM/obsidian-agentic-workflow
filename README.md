@@ -8,7 +8,7 @@ A skill for [Claude Code](https://claude.com/claude-code) and [Codex](https://de
 - **Task intake and tracking** — flat plans vs. multi-workstream Stories, status lifecycle, contract-first parallelism, real-time sync, archiving.
 - **Continuous documentation** — what's worth writing back to project reference docs after a task.
 - **Deterministic multi-agent workflows** — recognizing workflow-shaped work, the opt-in gate, rate-limit pacing.
-- **Obsidian as a docs/task-intake backend** — the CLI commands and conventions for implementing the task-intake and documentation patterns through an Obsidian vault, when that's how a project stores its docs and plans.
+- **Obsidian as a docs/task-intake backend** — how the task-intake and documentation patterns above map onto an Obsidian vault, when that's how a project stores its docs and plans. For the actual vault layout and CLI mechanics, see the companion [`obsidian-vault-toolkit`](https://github.com/KonievM/obsidian-vault-toolkit) (`obsidian-vault-structure` + `obsidian-vault-maintenance`).
 
 ## Install
 
