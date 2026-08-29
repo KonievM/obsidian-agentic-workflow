@@ -10,7 +10,7 @@ Durable, multi-session work needs a file a *different* session or a different ag
 
 **Why one file per subtask.** It's what lets N sub-agents work concurrently without stepping on each other's edits — each subtask file is a single agent's exclusive write surface. `Story.md`'s subtask table stays the one place to see the whole story's state at a glance, kept in sync with each subtask file's own status.
 
-**Contract-first is what unblocks parallelism.** `Tech Design.md`'s Contracts section should pin down each new/changed interface (endpoint, function signature, event shape — whatever the boundary is) specifically enough that one workstream can build against it and another can implement it, independently and before either side is done. If a contract needs to change mid-flight, edit it in `Tech Design.md` (single source of truth) and flag every subtask referencing it — don't let each side re-derive it independently.
+**Contract-first is what unblocks parallelism.** `Tech Design.md`'s Contracts section should pin down each new/changed interface (endpoint, function signature, event shape — whatever the boundary is) specifically enough that one workstream can build against it and another can implement it, independently and before either side is done. If a contract needs to change mid-flight, edit it in `Tech Design.md` (single source of truth) and flag every subtask referencing it — don't let each side re-derive it independently. *(Ontology engineering in miniature — a shared, explicit schema every workstream reasons against instead of each re-deriving its own.)*
 
 ## Write it directly, don't draft-then-ask
 
@@ -22,14 +22,17 @@ Reserve "ask before creating a new file" for genuinely ambiguous cases — uncle
 
 ## Working a Story as a managing agent
 
-1. Read `Story.md`'s subtask table for current status.
-2. For each subtask still open/in-progress, spawn one sub-agent per subtask **in parallel** (a single batch of calls, not sequential). Brief each with its subtask file's path, the relevant Contracts section, the target repo/service, and the instruction to flip *only its own* subtask file's status to in-progress immediately on starting and update its Implementation Notes as it goes — not just at the end.
-3. As each sub-agent reports back — not only once the whole batch is done — apply "verify, don't just relay" (`subagent-lifecycle.md`) before flipping its subtask to done: check the actual diff, not just the summary.
-4. Sync `Story.md`'s subtask table right after each verified update — don't batch the sync until every subtask finishes. Anyone opening `Story.md` mid-session should see current reality.
+1. Read `Story.md`'s subtask table for current status and each subtask's declared dependencies.
+2. Determine the next ready wave from that table's *current* state, not from a dependency list memorized at the start of the session — a subtask is ready the moment the table shows its blockers as `done`, whether that happened just now or in an earlier session. Don't hold the schedule in your own head; re-read the table each time.
+3. For each subtask that's ready and still open/in-progress, spawn one sub-agent per subtask **in parallel** (a single batch of calls, not sequential). Brief each with its subtask file's path, the relevant Contracts section, the target repo/service, and the instruction to flip *only its own* subtask file's status to in-progress immediately on starting and update its Implementation Notes as it goes — not just at the end.
+4. As each sub-agent reports back — not only once the whole batch is done — apply "verify, don't just relay" (`subagent-lifecycle.md`) before flipping its subtask to done: check the actual diff, not just the summary.
+5. Sync `Story.md`'s subtask table right after each verified update — don't batch the sync until every subtask finishes. Anyone opening `Story.md` mid-session should see current reality, and the next wave (step 2) reads it fresh.
+
+(Steps 1–2 are the same stigmergic-coordination idea as real-time tracking above, applied to sequencing itself: wave readiness comes from re-reading the shared file's current state rather than a schedule root holds in its head — cellular automata.)
 
 ## Status lifecycle
 
-`open` → `in_progress`/`blocked` while worked → `done`/`cancelled` when finished (add a `completed: <date>` field at that point). Applies to both flat plans and every file within a Story.
+`open` → `in_progress`/`blocked` while worked → `done`/`cancelled` when finished (add a `completed: <date>` field at that point). Applies to both flat plans and every file within a Story. A small fixed vocabulary rather than free-text status is itself an ontology-engineering move — anyone reading a subtask file (a person, root, a resumed session) gets an unambiguous, machine-checkable state instead of parsing prose.
 
 ## Real-time task tracking
 
@@ -39,6 +42,8 @@ Track status as work happens, not after the fact. Two scopes:
 - **Cross-session** (the plan/Story file itself): durable state a different session or agent needs to reconstruct where things stand with no conversation history. Same rule: flip a subtask to in-progress when a sub-agent starts it and to done as soon as its work is verified — as part of that sub-agent's own brief, not as a batch sync you perform once at the end.
 
 The failure mode this avoids: a plan file that only reflects reality once, at the very end. That's useless to anyone checking in mid-flight, and it's one dropped or interrupted session away from silently losing track of work that was actually finished and verified.
+
+This is cellular-automata-style stigmergic coordination, not hub-and-spoke chat: sub-agents write status into the shared Story/plan file directly, and anyone reading it — root, a resumed session, another sub-agent — gets current state from that shared surface instead of a relayed report.
 
 ## Pause and resume
 

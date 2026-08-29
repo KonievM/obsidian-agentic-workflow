@@ -15,6 +15,10 @@ Don't over-apply this — a single grep, a single file read, a two-line fix does
 
 **Resist mid-task scope creep back into execution.** The common failure isn't over-delegating, it's the reverse: a new constraint or fix-up lands mid-task and it feels like less overhead to just do it inline than to re-brief. That's exactly how a manager's context re-fills with the exploration/drafts it was supposed to stay clear of. Treat new instructions the same as the original ask — delegate them too. See `references/subagent-lifecycle.md`.
 
+## Where these patterns come from
+
+Several patterns below aren't ad hoc — each traces to a named paradigm from ongoing R&D research into agent design approaches: shared state that sub-agents read/write directly instead of relayed chat (**cellular automata** — stigmergic coordination), branching into multiple candidates and verifying/judging instead of trusting a single pass (**computable search**), and shared typed contracts/vocabularies instead of free-form prose between agents (**ontology engineering**). Each reference file names the paradigm inline at the specific point it applies; the underlying research notes are kept in a private vault outside this repo.
+
 ## Quick checklist
 
 1. Can this be answered in 1–2 direct tool calls? → just do it.

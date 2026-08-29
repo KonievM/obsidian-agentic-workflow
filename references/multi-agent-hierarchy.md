@@ -55,6 +55,8 @@ For concurrent implementations with genuinely unavoidable overlap, use separate 
 
 ## Brief contract
 
+*(Ontology engineering — a shared, explicit contract every brief conforms to, so independently-briefed agents interpret the same task the same way instead of each inferring its own scope.)*
+
 Every delegated task brief should state:
 
 - objective and explicit non-goals;
@@ -89,7 +91,9 @@ You verify the actual diffs and outputs, integrate in dependency order, run the 
 
 **Cross-repo feature.** You record the contract (API/event/schema) in the Story's Tech Design first. One lead owns each repo and branch. Backend contract work precedes dependent frontend validation unless mocks are explicitly part of the agreed contract. Each repo gets its own commit and its own validation evidence — never one commit spanning repos.
 
-**High-risk change.** One agent implements; a separate reviewer receives the requirement and the diff, but not the implementer's reasoning, so it isn't anchored to the implementer's own blind spots. The reviewer stays read-only and focuses on invariants, failure recovery, idempotency, authorization, and test gaps. You adjudicate rather than forwarding either side's conclusion uncritically.
+**High-risk change.** One agent implements; a separate reviewer receives the requirement and the diff, but not the implementer's reasoning, so it isn't anchored to the implementer's own blind spots. The reviewer stays read-only and focuses on invariants, failure recovery, idempotency, authorization, and test gaps. You adjudicate rather than forwarding either side's conclusion uncritically. *(A single-candidate verifier check — computable search's generate-then-verify idea, applied to one candidate.)*
+
+**Ambiguous high-risk design decision.** When a high-risk change also has more than one reasonable design — not just one implementation to double-check — don't settle for a single candidate: spawn 2–3 independent candidate plans in parallel from the same brief, then a separate judge agent that scores each against the actual requirements and either selects or merges them, rather than trusting one `Plan` pass. Reserve this for genuine design ambiguity or real stakes; a routine change still gets one plan. *(Computable search's branch-and-verify idea, applied to planning rather than only post-hoc review.)*
 
 ## Anti-patterns
 
