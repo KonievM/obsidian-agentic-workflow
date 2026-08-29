@@ -8,6 +8,8 @@ Everything in `subagent-lifecycle.md` is you spinning up sub-agents one at a tim
 
 The model-tier table (`model-tiers.md`) still applies inside a workflow — finder/generator stages map to the fast/cheap and balanced/default tiers, verify/judge panels map to the independent-second-opinion tier.
 
+**Write the plan before dispatching it.** If a workflow is about to implement a plan worth resuming (its own output from an earlier phase, or a host tool's plan-approval output), write that plan into the durable plan store as a Story or flat plan *before* dispatching the workflow that implements it, not after — per `task-intake-and-tracking.md`'s "write it directly" rule. The workflow's own agents can then reference the plan/Story path directly in their briefs, and the store stays the live record of what's actually running instead of a summary written after the fact.
+
 ## Rate limits and session budget — pace, don't stack
 
 Running several large fan-outs back-to-back in one continuous stretch — especially alongside an active background sub-agent — produces two concrete symptoms: transient per-call errors on individual agents within a workflow (usually harmless in isolation, resolved by resuming), and the session itself eventually hitting usage limits, losing whatever in-flight work wasn't yet written to disk.

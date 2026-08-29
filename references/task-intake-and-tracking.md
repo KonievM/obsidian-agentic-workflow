@@ -12,6 +12,14 @@ Durable, multi-session work needs a file a *different* session or a different ag
 
 **Contract-first is what unblocks parallelism.** `Tech Design.md`'s Contracts section should pin down each new/changed interface (endpoint, function signature, event shape — whatever the boundary is) specifically enough that one workstream can build against it and another can implement it, independently and before either side is done. If a contract needs to change mid-flight, edit it in `Tech Design.md` (single source of truth) and flag every subtask referencing it — don't let each side re-derive it independently.
 
+## Write it directly, don't draft-then-ask
+
+When a request names or clearly maps to one of these artifact shapes — "research X and write a plan," "create a story for Y," "document this as an architecture decision" — write the actual content directly into the plan store, in the same turn, using the matching template. Don't draft the full deliverable in your chat response and ask afterward whether to formalize it into a durable file — that inverts where the durable copy is supposed to live, produces a chat wall of text that's one summarization pass away from being lost, and leaves the store that's supposed to be authoritative empty in the meantime. Your reply in that case should be short: what was created, where (a path/link), and a one-paragraph summary — not the deliverable's full content restated in chat.
+
+This applies to your own output, not just a sub-agent's synthesis, and it applies to a plan produced via a host tool's own built-in plan-approval flow too — if that plan is worth resuming later, its durable copy belongs in the plan store, not only in whatever ephemeral, tool-internal location the approval flow defaults to. Write it to the store in the same turn the plan is approved, before or alongside starting implementation.
+
+Reserve "ask before creating a new file" for genuinely ambiguous cases — unclear which template fits, or unclear whether something is Story-sized vs. flat-plan-sized. A named or obviously-matching artifact type isn't ambiguous.
+
 ## Working a Story as a managing agent
 
 1. Read `Story.md`'s subtask table for current status.
@@ -39,3 +47,12 @@ Because state lives in the plan/Story files themselves (each file's status field
 ## Archiving
 
 Once a flat plan (or every subtask and the Story itself) is done/cancelled, add a `completed: <date>` field and move the file (or the whole Story folder) into an archive location — background reference only, not current behavior. Keep archived work separate from active plans so a fresh read of the active folder reflects only what's actually in flight.
+
+**Archiving is not the same as documenting — do both before considering the work finished.** Moving a folder to an archive location makes the *build history* (subtask-by-subtask decisions, evidence gathered along the way, bugs found in passing) inert — nobody browses the archive to learn how something currently works, and any link into the pre-archive path silently goes stale the moment the folder moves. A completed Story/plan being archived means the durable, current-state knowledge from it now needs to live somewhere a future session will actually look — the project's general reference docs, not the archived folder itself. Concretely, as part of the same archiving pass, not a follow-up:
+
+1. Decide whether the completed work needs its own reference note, or just a section/paragraph added to an existing one — judge by whether it has enough of its own data model/lifecycle/surface area to be genuinely worth its own note.
+2. Extend every reference doc whose scope the work actually touched — check the plan/Story's own scope/affected-files section and match each touched area to whatever documents it, rather than guessing which apply.
+3. Carry forward any real, still-open gaps (an explicitly deferred non-goal, a known unimplemented edge case, a bug found but not fixed) into the relevant note's own known-gaps section — don't let a Story's Open Questions be the only place these live, since that section stops being read once the folder is archived.
+4. Fix every link that pointed at the plan/Story by its pre-archive path — search for it before moving anything, and either repoint each hit to the new reference-doc location (preferred) or update it to the archive path if the link is genuinely about build history rather than current behavior. A dangling link is usually silent — nothing errors on it — and won't surface again until someone happens to follow it.
+
+Treat "archived" and "documented" as two separate, both-required checkboxes — a Story that's been archived but never folded into the general docs is a real state this kind of system can land in, not a hypothetical failure mode.

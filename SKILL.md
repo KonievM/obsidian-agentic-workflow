@@ -1,6 +1,6 @@
 ---
 name: obsidian-agentic-workflow
-description: Operating procedure for an orchestrating coding agent (Claude Code or Codex) managing multi-step engineering work — when and how to delegate to sub-agents, which model/reasoning tier to use for a task, how to delegate to the other tool (Claude and Codex, whichever one isn't the current agent) as an independent second opinion or a parallel workstream, how to track and hand off durable multi-session work (flat plans and multi-workstream Stories, including ones stored in an Obsidian vault), when to propose a deterministic multi-agent workflow, and how to keep project reference docs current. Use whenever a task is large enough to delegate, spans more than one session, needs a durable plan/story file to resume from, involves choosing a model tier, touches an Obsidian vault used for docs/plans, or should update the project's reference docs afterward.
+description: Operating procedure for an orchestrating coding agent (Claude Code or Codex) managing multi-step engineering work — when and how to delegate to sub-agents, which model/reasoning tier to use for a task, how to delegate to the other tool (Claude and Codex, whichever one isn't the current agent) as an independent second opinion or a parallel workstream, how to track and hand off durable multi-session work (flat plans and multi-workstream Stories, including ones stored in an Obsidian vault), when to propose a deterministic multi-agent workflow, when unit tests and API checks aren't enough to call a feature done, and how to keep project reference docs current. Use whenever a task is large enough to delegate, spans more than one session, needs a durable plan/story file to resume from, involves choosing a model tier, touches an Obsidian vault used for docs/plans, is about to be declared done based on tests/review alone, or should update the project's reference docs afterward.
 ---
 
 # Agentic Workflow
@@ -22,21 +22,25 @@ Don't over-apply this — a single grep, a single file read, a two-line fix does
 3. New instructions landing mid-task? → delegate those too (re-brief or spawn) — don't fold them into your own direct execution.
 4. Is the work complex, cross-cutting, or parallelizable enough to need a multi-file Story instead of a flat plan? → set one up per `references/task-intake-and-tracking.md` before spawning sub-agents against it.
 5. Is a single sub-agent's task big enough to span multiple milestones? → checkpoint and rotate per `references/subagent-lifecycle.md`, don't let one sub-agent run indefinitely.
-6. Brief every sub-agent with full context — it starts with none of this conversation.
-7. When it returns: verify, don't just relay. Check the actual diff/output, not only the summary. Sync any durable plan status immediately — don't batch it to the end (`references/task-intake-and-tracking.md`).
-8. Durable output goes where it belongs — a plan/Story file, a repo commit, a project reference doc — never left stranded only in a transcript.
-9. Does the task look like 3+ dependent/parallel agent calls (a big audit, migration, or review)? → propose a deterministic multi-agent workflow instead of hand-chaining sub-agent calls yourself, per `references/workflows-and-pacing.md` — but still wait for explicit user opt-in before running one.
-10. About to launch a large fan-out while another is still active, or seeing repeated rate/error signals? → pace it per `references/workflows-and-pacing.md`.
-11. Want an independent second opinion, or a genuinely separate parallel workstream? → check whether the other tool (Claude ↔ Codex) is reachable and off cooldown, per `references/cross-tool-delegation.md`.
-12. Finishing a non-trivial task? → check whether anything learned is worth persisting to the project's reference docs, per `references/continuous-documentation.md`.
+6. More than a couple of sub-agents genuinely in flight at once? → cap concurrency and wave the rest (`references/subagent-lifecycle.md`), and use `references/multi-agent-hierarchy.md` for role clarity and shared-worktree safety once it's a real fan-out, not a one-off.
+7. Brief every sub-agent with full context — it starts with none of this conversation.
+8. When it returns: verify, don't just relay. Check the actual diff/output, not only the summary. Sync any durable plan status immediately — don't batch it to the end (`references/task-intake-and-tracking.md`).
+9. Durable output goes where it belongs — a plan/Story file, a repo commit, a project reference doc — never left stranded only in a transcript. If a request names or clearly matches one of these artifact shapes, write it there directly, in the same turn — don't draft it in chat and ask afterward (`references/task-intake-and-tracking.md`).
+10. Does the task look like 3+ dependent/parallel agent calls (a big audit, migration, or review)? → propose a deterministic multi-agent workflow instead of hand-chaining sub-agent calls yourself, per `references/workflows-and-pacing.md` — but still wait for explicit user opt-in before running one.
+11. About to launch a large fan-out while another is still active, or seeing repeated rate/error signals? → pace it per `references/workflows-and-pacing.md`.
+12. Want an independent second opinion, or a genuinely separate parallel workstream? → check whether the other tool (Claude ↔ Codex) is reachable and off cooldown, per `references/cross-tool-delegation.md`.
+13. Finishing a non-trivial task? → check whether anything learned is worth persisting to the project's reference docs, per `references/continuous-documentation.md`.
+14. About to declare a feature done based on unit tests / code review / a direct API call alone? → if it touches a client/server seam, a real external integration, or combinatorial UI states, that's not enough — see `references/live-validation.md`.
 
 ## Reference files
 
 - `references/model-tiers.md` — cheapest-that-works tier framework, task-type → tier table, current model mappings for Claude and Codex.
-- `references/subagent-lifecycle.md` — when to spawn, briefing, nesting limit, rotation for long sub-agent runs, who verifies, where results live.
+- `references/subagent-lifecycle.md` — when to spawn, concurrency cap, briefing, nesting limit, rotation for long sub-agent runs, who verifies, where results live.
+- `references/multi-agent-hierarchy.md` — for a real fan-out (not just one-off delegation): role hierarchy, task-routing table, shared-worktree ownership/safety, a brief-contract checklist, structured handoff format, fan-out-pattern recipes, and anti-patterns.
 - `references/cross-tool-delegation.md` — using the other tool (Claude ↔ Codex) as an independent-model delegate: availability check, when to reach for it, usage-limit cooldown handling.
 - `references/task-intake-and-tracking.md` — flat plan vs. multi-workstream Story, status lifecycle, contract-first parallelism, real-time tracking, archiving. Generic starter templates for both live in `assets/templates/`.
 - `references/continuous-documentation.md` — what's worth writing back to project reference docs after a task, and what isn't.
+- `references/live-validation.md` — why unit tests and direct API calls both miss integration/contract bugs, when a real browser/app click-through against a real stack is worth the cost, and how to do it without touching real user data.
 - `references/obsidian-backend.md` — when the project's docs/plans live in an Obsidian vault, how this workflow's patterns (status lifecycle, archiving, cross-links) map onto one. Skip if the project doesn't use Obsidian. For the actual CLI commands, see the sibling `obsidian-vault-maintenance` skill; for how the vault should be laid out, see `obsidian-vault-structure`.
 - `references/workflows-and-pacing.md` — recognizing workflow-shaped work, the opt-in gate, rate-limit pacing for large fan-outs.
 
