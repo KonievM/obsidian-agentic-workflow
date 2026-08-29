@@ -1,0 +1,21 @@
+# Deterministic Workflows and Pacing
+
+Everything in `subagent-lifecycle.md` is you spinning up sub-agents one at a time, reading and integrating each before deciding what's next. A deterministic multi-agent workflow tool (if your harness has one — e.g. Claude Code's `Workflow` tool) is the same instinct at larger scale — fan out N agents, verify adversarially, synthesize — and it removes a specific failure mode: hand-rolling that orchestration yourself (chaining several sub-agent calls, holding each result in your own context just to brief the next one) is itself what re-fills your context with exactly the intermediate detail it's supposed to stay clear of.
+
+**Recognize the shape.** If a task looks like 3+ agent calls with real dependencies or synthesis between them — a broad review, a migration, an audit, a pile of genuinely independent parallel work — treat that as workflow-shaped. Don't quietly hand-chain sub-agent calls to cover it; recognize the shape and say so.
+
+**Recognizing vs. running.** Recognizing the shape and proposing a workflow is something you should do proactively — the default suggestion for big-chunk work, not a rare escalation reached for only when everything else has failed. Actually *running* one is gated by the tool's own opt-in requirement and that gate can't be loosened by this doc — it fires only on explicit user opt-in. Propose it, briefly explain the scope and rough cost, and wait for the user's go-ahead, the same as any other action with a real blast radius.
+
+The model-tier table (`model-tiers.md`) still applies inside a workflow — finder/generator stages map to the fast/cheap and balanced/default tiers, verify/judge panels map to the independent-second-opinion tier.
+
+## Rate limits and session budget — pace, don't stack
+
+Running several large fan-outs back-to-back in one continuous stretch — especially alongside an active background sub-agent — produces two concrete symptoms: transient per-call errors on individual agents within a workflow (usually harmless in isolation, resolved by resuming), and the session itself eventually hitting usage limits, losing whatever in-flight work wasn't yet written to disk.
+
+**The fix is pacing, not avoidance.** Large fan-outs remain the right tool for genuinely parallel, well-scoped work — the failure mode isn't caused by using them, it's caused by running several with no gap between them in a session that's already carrying other background work.
+
+- **One large fan-out in flight at a time**, as a default. A background sub-agent that's actively working also counts against this — don't launch a large workflow while a worktree agent is mid-task; launch it after, or after checking in on that agent first.
+- **Batch size should match real need, not maximum parallelism.** A large fan-out is appropriate when the task genuinely has that many independent units — it isn't the default size for every workflow. Ask whether the task actually has that many independent pieces before sizing a fan-out that large.
+- **A transient error on a few agents inside a workflow is not a signal to immediately blast a full-size retry.** A resume that replays completed agents from cache and only re-runs the failed ones is already the right-sized retry. Resuming is fine; launching a *second* large fan-out in addition while the first is still settling is what compounds the problem.
+- **Notice the pattern, don't just push through it.** If a rate-limit or "temporarily unavailable" signal shows up more than once in a short stretch, that's the session telling you it's running hot — stop and finish current work directly (a grep, a single edit, a targeted check) instead of reaching for another large parallel dispatch.
+- **A killed session is not a lost session** *if* state was being written as you went — this is the entire reason real-time tracking (`task-intake-and-tracking.md`) matters. A session that dies mid-workflow with plan/Story files already reflecting real progress is a quick resume. A session that dies having held everything in its own unwritten context loses real work.
