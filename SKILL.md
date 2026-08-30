@@ -19,6 +19,15 @@ Don't over-apply this — a single grep, a single file read, a two-line fix does
 
 Several patterns below aren't ad hoc — each traces to a named paradigm from ongoing R&D research into agent design approaches: shared state that sub-agents read/write directly instead of relayed chat (**cellular automata** — stigmergic coordination), branching into multiple candidates and verifying/judging instead of trusting a single pass (**computable search**), and shared typed contracts/vocabularies instead of free-form prose between agents (**ontology engineering**). Each reference file names the paradigm inline at the specific point it applies; the underlying research notes are kept in a private vault outside this repo.
 
+## Public-repo hygiene
+
+This skill's own files are versioned in a public GitHub repo. When editing anything here:
+
+- Never hardcode an absolute personal path (home directory, personal vault/notes location, machine-specific path) into skill content. Reference the *idea* or a relative/generic path instead of where it happens to live on one machine.
+- Before committing, check the diff itself for `/Users/<name>`, `/home/<name>`, or similar — don't rely on remembering not to add one.
+- Before pushing, check that no commit trailer or footer a harness auto-appends (e.g. a session-URL trailer) is going out with it — strip it if the target repo is public.
+- If something personal does land in a public repo's history, fixing only the latest commit isn't enough — it needs a history rewrite (e.g. `git filter-repo`) and a force-push, not just a follow-up commit.
+
 ## Quick checklist
 
 1. Can this be answered in 1–2 direct tool calls? → just do it.
