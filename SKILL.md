@@ -42,8 +42,9 @@ This skill's own files are versioned in a public GitHub repo. When editing anyth
 10. Does the task look like 3+ dependent/parallel agent calls (a big audit, migration, or review)? → propose a deterministic multi-agent workflow instead of hand-chaining sub-agent calls yourself, per `references/workflows-and-pacing.md` — but still wait for explicit user opt-in before running one.
 11. About to launch a large fan-out while another is still active, or seeing repeated rate/error signals? → pace it per `references/workflows-and-pacing.md`.
 12. Want an independent second opinion, or a genuinely separate parallel workstream? → check whether the other tool (Claude ↔ Codex) is reachable and off cooldown, per `references/cross-tool-delegation.md`.
-13. Finishing a non-trivial task? → check whether anything learned is worth persisting to the project's reference docs, per `references/continuous-documentation.md`.
-14. About to declare a feature done based on unit tests / code review / a direct API call alone? → if it touches a client/server seam, a real external integration, or combinatorial UI states, that's not enough — see `references/live-validation.md`.
+13. Do two or more agents need genuinely repeated back-and-forth with each other — debate, live cross-challenge, multi-round interface renegotiation — not just a one-shot brief-and-report? → direct peer-to-peer messaging (e.g. Claude Code's Agent Teams) can be worth its extra cost; see `references/peer-communication.md`. It costs *more* tokens than hub-and-spoke, not less — don't reach for it expecting context savings, and don't use it where a pattern below deliberately keeps agents isolated from each other.
+14. Finishing a non-trivial task? → check whether anything learned is worth persisting to the project's reference docs, per `references/continuous-documentation.md`.
+15. About to declare a feature done based on unit tests / code review / a direct API call alone? → if it touches a client/server seam, a real external integration, or combinatorial UI states, that's not enough — see `references/live-validation.md`.
 
 ## Reference files
 
@@ -51,6 +52,7 @@ This skill's own files are versioned in a public GitHub repo. When editing anyth
 - `references/subagent-lifecycle.md` — when to spawn, concurrency cap, briefing, nesting limit, rotation for long sub-agent runs, who verifies, where results live.
 - `references/multi-agent-hierarchy.md` — for a real fan-out (not just one-off delegation): role hierarchy, task-routing table, shared-worktree ownership/safety, a brief-contract checklist, structured handoff format, fan-out-pattern recipes, and anti-patterns.
 - `references/cross-tool-delegation.md` — using the other tool (Claude ↔ Codex) as an independent-model delegate: availability check, when to reach for it, usage-limit cooldown handling.
+- `references/peer-communication.md` — direct agent-to-agent messaging (e.g. Agent Teams) as an escalation from hub-and-spoke: what it actually buys (not context savings — it costs more), when it earns its keep, when it breaks patterns that deliberately keep agents isolated, and the failure modes to guard against.
 - `references/task-intake-and-tracking.md` — flat plan vs. multi-workstream Story, status lifecycle, contract-first parallelism, real-time tracking, archiving. Generic starter templates for both live in `assets/templates/`.
 - `references/continuous-documentation.md` — what's worth writing back to project reference docs after a task, and what isn't.
 - `references/live-validation.md` — why unit tests and direct API calls both miss integration/contract bugs, when a real browser/app click-through against a real stack is worth the cost, and how to do it without touching real user data.

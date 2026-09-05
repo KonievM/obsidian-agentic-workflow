@@ -26,6 +26,7 @@ Keep the tree shallow: root → specialist/reviewer is the default. Root → lea
 | Cross-repo feature | One workstream lead per repo; you pin the contract and branch for each before dispatch |
 | Story with independent subtasks | One agent per ready subtask, respecting dependency order and available concurrency; each updates only its own durable status artifact |
 | High-risk change (money movement, auth, migrations, infrastructure writes) | Implementation agent plus a separate read-only reviewer; you resolve findings and validate |
+| Debugging with genuinely competing hypotheses | Independent investigators that message each other directly to challenge each other's theories, not just report to you in isolation — see `peer-communication.md` |
 | CI failure or review-comment batch | Separate diagnostics by failing job/comment cluster only when independent; a single agent owns each eventual file edit |
 | Visual/browser validation | Implementation and visual-review can be separate workstreams; the reviewer records evidence and doesn't silently redesign |
 
@@ -71,7 +72,9 @@ Every delegated task brief should state:
 
 ## Communication and handoff
 
-Send follow-up context to the existing owner of a workstream rather than spawning a duplicate agent for work already in flight. Agents should report blockers early and clearly distinguish observed facts from inferences.
+By default, agents talk only to whoever spawned them — never to each other — and you're the sole integrator. Send follow-up context to the existing owner of a workstream rather than spawning a duplicate agent for work already in flight. Agents should report blockers early and clearly distinguish observed facts from inferences.
+
+Escalate past that default only when two or more agents need genuinely repeated back-and-forth with each other, not just with you — see `peer-communication.md` for when that earns its keep and when it would break a pattern (like the high-risk-change reviewer above) that depends on agents staying isolated from each other.
 
 A completion handoff should state:
 
@@ -93,7 +96,9 @@ You verify the actual diffs and outputs, integrate in dependency order, run the 
 
 **High-risk change.** One agent implements; a separate reviewer receives the requirement and the diff, but not the implementer's reasoning, so it isn't anchored to the implementer's own blind spots. The reviewer stays read-only and focuses on invariants, failure recovery, idempotency, authorization, and test gaps. You adjudicate rather than forwarding either side's conclusion uncritically. *(A single-candidate verifier check — computable search's generate-then-verify idea, applied to one candidate.)*
 
-**Ambiguous high-risk design decision.** When a high-risk change also has more than one reasonable design — not just one implementation to double-check — don't settle for a single candidate: spawn 2–3 independent candidate plans in parallel from the same brief, then a separate judge agent that scores each against the actual requirements and either selects or merges them, rather than trusting one `Plan` pass. Reserve this for genuine design ambiguity or real stakes; a routine change still gets one plan. *(Computable search's branch-and-verify idea, applied to planning rather than only post-hoc review.)*
+**Ambiguous high-risk design decision.** When a high-risk change also has more than one reasonable design — not just one implementation to double-check — don't settle for a single candidate: spawn 2–3 independent candidate plans in parallel from the same brief, then a separate judge agent that scores each against the actual requirements and either selects or merges them, rather than trusting one `Plan` pass. Reserve this for genuine design ambiguity or real stakes; a routine change still gets one plan. *(Computable search's branch-and-verify idea, applied to planning rather than only post-hoc review.)* Keep candidates independent of each other here — this is the opposite case from the next pattern.
+
+**Competing-hypotheses debugging.** When the root cause is genuinely unclear, isolated investigators tend to anchor on whichever theory got explored first. Spawn several, each committed to a different hypothesis, and have them message each other directly to actively try to disprove one another's theories rather than only reporting to you — see `peer-communication.md` for the mechanics and when this is worth its extra cost over the default hub-and-spoke shape above.
 
 ## Anti-patterns
 
